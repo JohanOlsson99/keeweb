@@ -387,6 +387,8 @@ class AppModel {
     prepareFilter(filter) {
         filter = { ...filter };
 
+        filter = this.getTagAndShowText(filter);
+
         filter.textLower = filter.text ? filter.text.toLowerCase() : '';
         filter.textParts = null;
         filter.textLowerParts = null;
@@ -402,6 +404,19 @@ class AppModel {
 
         filter.tagLower = filter.tag ? filter.tag.toLowerCase() : '';
 
+        return filter;
+    }
+
+    getTagAndShowText(filter) {
+        const text = filter.text;
+        filter.showText = text;
+        if (text && text !== '') {
+            const textList = text.split('#');
+            if (textList.length === 2) {
+                filter.tag = textList[1].toLowerCase();
+            }
+            filter.text = textList[0];
+        }
         return filter;
     }
 
