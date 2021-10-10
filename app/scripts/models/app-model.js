@@ -387,8 +387,9 @@ class AppModel {
     prepareFilter(filter) {
         filter = { ...filter };
 
-        filter = this.getTagAndShowText(filter);
-
+        // filter = this.getTagAndShowText(filter);
+        // filter = this.getGroupFilter(filter);
+        filter = this.getGroupAndTag(filter);
         filter.textLower = filter.text ? filter.text.toLowerCase() : '';
         filter.textParts = null;
         filter.textLowerParts = null;
@@ -407,16 +408,29 @@ class AppModel {
         return filter;
     }
 
-    getTagAndShowText(filter) {
-        const text = filter.text;
-        filter.showText = text;
-        if (text && text !== '') {
-            const textList = text.split('#');
-            if (textList.length === 2) {
-                filter.tag = textList[1].toLowerCase();
+    getGroupAndTag(filter) {
+        let remainingText = '';
+        if (filter.text && filter.text !== '') {
+            remainingText = filter.text;
+            filter.showText = remainingText;
+            const groupSplit = remainingText.split('/');
+            if (groupSplit.length === 2) {
+                this.files.forEach((file) => {
+                    file.forEachGroup((group) => {
+                        if (group.group.name == groupSplit[0]) {
+                            filter.group = group.id;
+                        }
+                    });
+                });
+                remainingText = groupSplit[1];
             }
-            filter.text = textList[0];
+            const tagSplit = remainingText.split('#');
+            if (tagSplit.length === 2) {
+                filter.tag = tagSplit[1].toLowerCase();
+                remainingText = tagSplit[0];
+            }
         }
+        filter.text = remainingText;
         return filter;
     }
 
