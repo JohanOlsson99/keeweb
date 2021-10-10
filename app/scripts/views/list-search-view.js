@@ -267,7 +267,7 @@ class ListSearchView extends View {
 
     filterChanged(filter) {
         this.hideSearchOptions();
-        if (filter.filter.text !== this.inputEl.val()) {
+        if (filter.filter.showText !== this.inputEl.val()) {
             this.inputEl.val(filter.text || '');
         }
         const sortIconCls = this.sortIcons[filter.sort] || 'sort';
