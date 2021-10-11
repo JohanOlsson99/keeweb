@@ -1,0 +1,25 @@
+.search-data-show-i {
+    font-size: 12px;
+    vertical-align: baseline;
+    position: relative;
+    top: -1px;
+    opacity: .5;
+}
+
+.search-data-show-folder, .search-data-show-tag {
+    background-color:rgb(36, 87, 201);
+    padding: 1px 6px;
+    border-radius: 2px;
+}
+
+.search-data-show-search {
+    border: 1px solid rgb(107, 107, 108);
+    border-radius: 1px;
+    box-shadow:rgba(0, 0, 0, 0.06) 0px 1px 3px 0px inset, rgb(68, 116, 157) 0px 0px 0px 3px;
+    padding: 6px 8px;
+  }
+
+.search-data-show-body {
+    font-family:-apple-system, system-ui, "Segoe UI", "Helvetica Neue", Helvetica, Roboto, Arial, "Microsoft YaHei", 微软雅黑, "PingFang SC", "Hiragino Sans GB", STXihei, 华文细黑, sans-serif;
+    align-items: center;
+}

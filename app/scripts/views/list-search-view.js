@@ -15,6 +15,10 @@ class ListSearchView extends View {
 
     template = template;
 
+    searchValue = '';
+    tagValue = '';
+    groupValue = '';
+
     events = {
         'keydown .list__search-field': 'inputKeyDown',
         'keypress .list__search-field': 'inputKeyPress',
@@ -179,7 +183,11 @@ class ListSearchView extends View {
         super.render({
             adv: this.advancedSearch,
             advEnabled: this.advancedSearchEnabled,
-            canCreate: this.model.canCreateEntries()
+            canCreate: this.model.canCreateEntries(),
+            searchValue: this.searchValue,
+            tagValue: this.tagValue,
+            groupValue: this.groupValue,
+            inputIsSome: this.searchValue !== '' || this.tagValue !== '' || this.groupValue !== ''
         });
         this.inputEl = this.$el.find('.list__search-field');
         if (searchVal) {
@@ -280,6 +288,18 @@ class ListSearchView extends View {
             this.advancedSearchEnabled = adv;
             this.$el.find('.list__search-adv').toggleClass('hide', !this.advancedSearchEnabled);
         }
+        if (filter.filter.tag && filter.filter.tag !== '') {
+            this.tagValue = filter.filter.tag;
+        } else {
+            this.tagValue = '';
+        }
+        if (filter.filter.groupName && filter.filter.groupName !== '') {
+            this.groupValue = filter.filter.groupName;
+        } else {
+            this.groupValue = '';
+        }
+        this.searchValue = filter.filter.text;
+        this.render();
     }
 
     createOptionsClick(e) {

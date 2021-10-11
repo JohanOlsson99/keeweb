@@ -418,8 +418,7 @@ class AppModel {
                 let groupFound = false;
                 this.files.forEach((file) => {
                     file.forEachGroup((group) => {
-                        if (group.group.name.toLowerCase() === groupSplit[0].toLowerCase()) {
-                            groupFound = true;
+                        if (group.group.name === groupSplit[0]) {
                             filter.group = group.id;
                             filter.groupName = groupSplit[0];
                             filter.groupSearched = true;
