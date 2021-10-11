@@ -337,7 +337,6 @@ class AppModel {
     }
 
     getEntriesByFilter(filter, files) {
-        const preparedFilter = this.prepareFilter(filter);
         const entries = new SearchResultCollection();
 
         const devicesToMatchOtpEntries = files.filter((file) => file.backend === 'otp-device');
@@ -347,7 +346,7 @@ class AppModel {
         files
             .filter((file) => file.backend !== 'otp-device')
             .forEach((file) => {
-                file.forEachEntry(preparedFilter, (entry) => {
+                file.forEachEntry(filter, (entry) => {
                     if (matchedOtpEntrySet) {
                         for (const device of devicesToMatchOtpEntries) {
                             const matchingEntry = device.getMatchingEntry(entry);
@@ -362,7 +361,7 @@ class AppModel {
 
         if (devicesToMatchOtpEntries.length) {
             for (const device of devicesToMatchOtpEntries) {
-                device.forEachEntry(preparedFilter, (entry) => {
+                device.forEachEntry(filter, (entry) => {
                     if (!matchedOtpEntrySet || !matchedOtpEntrySet.has(entry)) {
                         entries.push(entry);
                     }
@@ -387,8 +386,6 @@ class AppModel {
     prepareFilter(filter) {
         filter = { ...filter };
 
-        // filter = this.getTagAndShowText(filter);
-        // filter = this.getGroupFilter(filter);
         filter = this.getGroupAndTag(filter);
         filter.textLower = filter.text ? filter.text.toLowerCase() : '';
         filter.textParts = null;
@@ -412,24 +409,46 @@ class AppModel {
         let remainingText = '';
         if (filter.text && filter.text !== '') {
             remainingText = filter.text;
+            // showText will be the text that should be displayed in the search bar
             filter.showText = remainingText;
+
+            // takes out the group string and group id
             const groupSplit = remainingText.split('/');
             if (groupSplit.length === 2) {
+                let groupFound = false;
                 this.files.forEach((file) => {
                     file.forEachGroup((group) => {
-                        if (group.group.name == groupSplit[0]) {
+                        if (group.group.name.toLowerCase() === groupSplit[0].toLowerCase()) {
+                            groupFound = true;
                             filter.group = group.id;
+                            filter.groupName = groupSplit[0];
+                            filter.groupSearched = true;
                         }
                     });
                 });
+                // if no group found, display all entries for all groups
+                if (!groupFound) {
+                    delete filter.group;
+                    delete filter.groupName;
+                    filter.groupSearched = false;
+                }
                 remainingText = groupSplit[1];
             }
+
+            // takes out the tag string
             const tagSplit = remainingText.split('#');
             if (tagSplit.length === 2) {
                 filter.tag = tagSplit[1].toLowerCase();
                 remainingText = tagSplit[0];
             }
+        } else if (!filter.groupSearched) {
+            delete filter.groupName;
+        } else if (filter.showText && filter.showText !== '' && filter?.text === '') {
+            // user have deleted the text, we delete group search
+            delete filter.group;
+            delete filter.groupName;
         }
+        // set the entry text which to search for
         filter.text = remainingText;
         return filter;
     }
