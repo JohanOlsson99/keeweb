@@ -422,6 +422,7 @@ class AppModel {
                             filter.group = group.id;
                             filter.groupName = groupSplit[0];
                             filter.groupSearched = true;
+                            groupFound = true;
                         }
                     });
                 });
