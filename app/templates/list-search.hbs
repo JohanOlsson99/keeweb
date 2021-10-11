@@ -5,10 +5,32 @@
         </div>
         <div class="list__search-field-wrap">
             <input type="text" class="list__search-field input-search" autocomplete="off" spellcheck="false">
+            
             <div class="list__search-icon-search" title="{{res 'searchAdvTitle'}}">
                 <i class="fa fa-search"></i>
                 <i class="fa fa-caret-down"></i>
             </div>
+
+            {{#if inputIsSome}}
+            <div class="list__search-tag-group-search search-data-show-search search-data-show-body">
+                {{#ifneq groupValue ''}}
+                    <h class="fa fa-folder search-data-show-i search-data-show-folder"> {{ groupValue }} </h>
+                {{/ifneq}}
+                <h class="search-data-show-i"> {{ searchValue }} </h> 
+                {{#ifneq tagValue ''}}
+                    <h class="fa fa-tag search-data-show-i search-data-show-tag"> {{ tagValue }}</h>
+                {{/ifneq}}
+            </div>
+            {{/if}}
+
+            {{!-- <div class="list__search-add-tag" title="">
+                <i class="fa fa-tag"></i>
+            </div>
+
+            <div class="list__search-add-folder" title="">
+                <i class="fa fa-folder-o"></i>
+            </div> --}}
+
             <div class="list__search-icon-clear">
                 <i class="fa fa-times-circle"></i>
             </div>
